@@ -10,10 +10,10 @@
     "emailFrom": "info@my-node-api.com",
     "smtpOptions": {
         "host": "smtp.ethereal.email",
-        "port": "587",
+        "port": 587,
         "auth": {
-            "user": "my_ethereal_user",
-            "pass": "my_ethereal_pass"
+            "user": "neil.hammes@ethereal.email",
+            "pass": "pnDN6hHFA91uHj5XAY"
         }
     }
 }
