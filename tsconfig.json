@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
 
     // See also https://aka.ms/tsconfig/module
-    //"types": [],
+    "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
