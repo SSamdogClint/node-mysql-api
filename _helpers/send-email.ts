@@ -29,7 +29,34 @@ function getEmailFrom() {
     return process.env.EMAIL_FROM || config.emailFrom;
 }
 
+async function sendWithResend({ to, subject, html, from }: any) {
+    const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: from || getEmailFrom(),
+            to: Array.isArray(to) ? to : [to],
+            subject,
+            html
+        })
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw `Resend email failed: ${error}`;
+    }
+}
+
 export default async function sendEmail({to,subject,html, from =  getEmailFrom() }:any) {
+    const hasResend = !!process.env.RESEND_API_KEY;
+
+    if (hasResend) {
+        return await sendWithResend({ to, subject, html, from });
+    }
+
     const transporter = nodemailer.createTransport(getSmtpOptions());
-    await transporter.sendMail({from, to, subject,html});
+    await transporter.sendMail({ from, to, subject, html });
 }
