@@ -57,7 +57,9 @@ async function sendWithResend({ to, subject, html, from }: any) {
     }
 }
 
-export default async function sendEmail({to,subject,html, from =  getEmailFrom() }:any) {
+export default async function sendEmail({ to, subject, html, from = getEmailFrom() }: any) {
+    if (!from) throw 'EMAIL_FROM is missing';
+
     const hasResend = !!process.env.RESEND_API_KEY;
 
     if (hasResend) {
