@@ -1,4 +1,3 @@
-import config from '../config.json';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
@@ -6,6 +5,13 @@ import { Op } from 'sequelize';
 import sendEmail from '../_helpers/send-email';
 import db from '../_helpers/db';
 import Role from '../_helpers/role';
+
+type FileConfig = {
+    secret?: string;
+};
+
+const fileConfig: FileConfig =
+    process.env.NODE_ENV === 'production' ? {} : require('../config.json');
 
 export default {
     authenticate,
@@ -197,7 +203,7 @@ function getJwtSecret() {
         throw 'JWT_SECRET environment variable is required in production';
     }
 
-    const secret = process.env.JWT_SECRET || config.secret;
+    const secret = process.env.JWT_SECRET || fileConfig.secret;
 
     if (!secret) throw 'JWT secret is missing';
 

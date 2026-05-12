@@ -1,15 +1,28 @@
-import config from '../config.json';
 import mysql from 'mysql2/promise';
 import { Sequelize } from 'sequelize';
 import accountModel from '../accounts/account.model';
 import refreshTokenModel from '../accounts/refresh-token.model';
+
+type FileConfig = {
+  database?: {
+    host?: string;
+    port?: number;
+    user?: string;
+    password?: string;
+    database?: string;
+  };
+};
+
+const fileConfig: FileConfig =
+  process.env.NODE_ENV === 'production' ? {} : require('../config.json');
+
 
 const db: any = {};
 export default db;
 
 
 async function initialize() {
-  const databaseConfig = config.database; // Gets local database settings from config.json.
+  const databaseConfig = fileConfig.database; // Gets local database settings from config.json.
 
   const host = process.env.DB_HOST || databaseConfig.host; // Uses env DB host or local config host.
   const port = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : (databaseConfig.port || 3306); // Uses env DB port or default 3306.

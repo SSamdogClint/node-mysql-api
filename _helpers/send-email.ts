@@ -1,5 +1,12 @@
 import nodemailer from 'nodemailer';
-import config from "../config.json";
+
+type FileConfig = {
+    emailFrom?: string;
+    smtpOptions?: any;
+};
+
+const fileConfig: FileConfig =
+    process.env.NODE_ENV === 'production' ? {} : require('../config.json');
 
 function getSmtpOptions() {
     if (process.env.NODE_ENV === 'production' && !process.env.SMTP_HOST) {
@@ -20,13 +27,13 @@ function getSmtpOptions() {
         };
     }
 
-    if (!config.smtpOptions) throw 'SMTP configuration is missing';
+    if (!fileConfig.smtpOptions) throw 'SMTP configuration is missing';
 
-    return config.smtpOptions;
+    return fileConfig.smtpOptions;
 }
 
 function getEmailFrom() {
-    return process.env.EMAIL_FROM || config.emailFrom;
+    return process.env.EMAIL_FROM || fileConfig.emailFrom;
 }
 
 async function sendWithResend({ to, subject, html, from }: any) {
